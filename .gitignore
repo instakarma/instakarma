@@ -31,3 +31,4 @@ node_modules
 
 # Foreman
 .env.idea/
+.env

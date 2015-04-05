@@ -3,15 +3,16 @@ var passport        = require('passport');
 var GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
 var app             = express();
 
-app.set('port', (process.env.PORT || 3000))
+app.set('port', (process.env.PORT || 3000));
 
-var googleClientID = process.env.GOOGLE_CLIENT_ID;
-var googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+var callbackHost        = process.env.CALLBACK_HOST || 'http://127.0.0.1:3000';
+var googleClientID      = process.env.GOOGLE_CLIENT_ID;
+var googleClientSecret  = process.env.GOOGLE_CLIENT_SECRET;
 
 passport.use(new GoogleStrategy({
     clientID: googleClientID,
     clientSecret: googleClientSecret,
-    callbackURL: 'http://127.0.0.1:3000/auth/google/callback'
+    callbackURL: callbackHost + '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -48,11 +49,10 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    console.log(req.user);
-    res.redirect('/');
-  }
+  passport.authenticate('google', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  })
 );
 
 app.get('/logout', function(req, res){
