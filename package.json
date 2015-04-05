@@ -1,6 +1,6 @@
 {
   "name": "phatkarma",
-  "description": "Track dat karma"
+  "description": "Track dat karma",
   "version": "0.0.1",
   "dependencies": {
     "express": "^4.12.3",
