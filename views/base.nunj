@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<title>suchkarma</title>
+
+<header>
+    <a href="/">suchkarma</a>
+    <hr>
+</header>
+
+<section>
+    {% block main %}{% endblock %}
+</section>
+
+<footer>
+    <hr>
+    Footar!
+</footer>

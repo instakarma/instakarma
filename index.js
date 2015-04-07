@@ -1,4 +1,5 @@
 var express         = require('express');
+var nunjucks        = require('nunjucks');
 var passport        = require('passport');
 var GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
 var mongo           = require('./mongo.js')
@@ -51,8 +52,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set('view engine', 'nunj');
+
+nunjucks.configure('views', {
+    autoescape: true,
+    watch: true,
+    express: app,
+});
+
 app.get('/', function(req, res){
-  res.send('<a href="/login">Login</a>');
+  res.render('index');
 });
 
 app.get('/account', ensureAuthenticated, function(req, res) {
