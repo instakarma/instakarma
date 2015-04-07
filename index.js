@@ -75,12 +75,13 @@ app.get('/newuser', function(req, res) {
 app.post('/newuser', function(req, res) {
   if (req.isAuthenticated()) {
     if (req.body.uname) {
-      var user = mongo.setName(req.user.provider, req.user.id, req.body.uname);
-      if (!user) {
-        res.sendStatus(500);
-      } else {
-        res.redirect('/users/' + user);
-      }
+      mongo.setName(req.user.provider, req.user.id, req.body.uname, function(user) {
+        if (!user) {
+          res.sendStatus(500);
+        } else {
+          res.redirect('/users/' + user);
+        }
+      });
     } else {
       res.sendStatus(403);
     }
@@ -90,6 +91,10 @@ app.post('/newuser', function(req, res) {
 app.get('/users/:username', ensureAuthenticated, function(req, res) {
   var user = req.suchkarma.user;
   res.send(user.username + ': ' + user.karma);
+});
+
+app.get('/users/:username/give', ensureAuthenticated, function(req, res) {
+  res.sendStatus(204)
 });
 
 app.get('/login', function(req, res){

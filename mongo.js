@@ -23,10 +23,11 @@ var userSchema = new mongoose.Schema({
 
 var User = mongoose.model('Users', userSchema);
 
+var providerQuery = '{"auth.provider": provider, "auth.id": id}';
+
 var mongo = {
   getUser: function(provider, id, cb) {
-    var auth = '{"auth.provider": provider, "auth.id": id}';
-    User.findOne(auth, function(err, result) {
+    User.findOne(providerQuery, function(err, result) {
       if (!err) {
         cb(result);
       } else {
@@ -34,13 +35,13 @@ var mongo = {
       }
     });
   },
-  setName: function(provider, id, username) {
-    var which = {'auth.provider': provider, 'auth.id': id};
-    User.update(which, {username: username}, {upsert: true}, function(err) {
+  setName: function(provider, id, username, cb) {
+    User.update(providerQuery, {username: username}, {upsert: true}, function(err) {
       if (!err) {
-        return username;
+        cb(username);
+      } else {
+        cb(null);
       }
-      return null;
     });
   }
 }
