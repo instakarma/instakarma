@@ -52,7 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', function(req, res){
-  res.send('instakarma');
+  res.send('<a href="/login">Login</a>');
 });
 
 app.get('/account', ensureAuthenticated, function(req, res) {
@@ -90,7 +90,7 @@ app.post('/newuser', function(req, res) {
 
 app.get('/users/:username', ensureAuthenticated, function(req, res) {
   var user = req.suchkarma.user;
-  res.send(user.username + ': ' + user.karma);
+  res.send(user.username + ' has ' + user.karma + ' karma.');
 });
 
 app.get('/users/:username/give', ensureAuthenticated, function(req, res) {
