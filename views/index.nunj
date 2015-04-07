@@ -3,6 +3,8 @@
 {% block main %}
   {% if name %}
     Welcome, {{ name }}! You have {{ karma }} karma.
+    <br/>
+    <a href="/logout">Logout</a>
   {% else %}
     <a href="/login">Login</a>
   {% endif %}
