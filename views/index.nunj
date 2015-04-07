@@ -1,5 +1,9 @@
 {% extends 'base.nunj' %}
 
 {% block main %}
+  {% if name %}
+    Welcome, {{ name }}! You have {{ karma }} karma.
+  {% else %}
     <a href="/login">Login</a>
+  {% endif %}
 {% endblock %}

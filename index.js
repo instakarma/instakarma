@@ -60,50 +60,16 @@ nunjucks.configure('views', {
     express: app,
 });
 
-app.get('/', function(req, res){
-  res.render('index');
-});
-
-app.get('/account', ensureAuthenticated, function(req, res) {
-  res.send({ user: req.user });
-});
-
-app.get('/newuser', function(req, res) {
+app.get('/', function(req, res) {
   if (req.isAuthenticated()) {
-    res.send(
-      '<form action="/newuser" method="POST">' +
-        '<label for="uname">Username</label>' +
-        '<input id="uname" name="uname" type="text"/>' +
-        '<input type="submit" value="Submit">' +
-      '</form>');
-  } else {
-    res.redirect("/login");
-  }
-});
-
-app.post('/newuser', function(req, res) {
-  if (req.isAuthenticated()) {
-    if (req.body.uname) {
-      mongo.setName(req.user.provider, req.user.id, req.body.uname, function(user) {
-        if (!user) {
-          res.sendStatus(500);
-        } else {
-          res.redirect('/users/' + user);
-        }
-      });
-    } else {
-      res.sendStatus(403);
+    var show = {
+      name: req.user.name.givenName,
+      karma: 0 //TODO
     }
+    res.render('index', show);
+  } else {
+    res.render('index');
   }
-});
-
-app.get('/users/:username', ensureAuthenticated, function(req, res) {
-  var user = req.suchkarma.user;
-  res.send(user.username + ' has ' + user.karma + ' karma.');
-});
-
-app.get('/users/:username/give', ensureAuthenticated, function(req, res) {
-  res.sendStatus(204)
 });
 
 app.get('/login', function(req, res){
@@ -129,14 +95,7 @@ app.get('/logout', function(req, res){
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    mongo.getUser(req.user.provider, req.user.id, function(user) {
-      if (user) {
-        req.suchkarma = { user: user };
-        return next();
-      } else {
-        res.redirect('/newuser');
-      }
-    });
+    return next();
   } else {
     res.redirect('/login');
   }
