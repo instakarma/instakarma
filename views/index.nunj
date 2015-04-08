@@ -1,8 +1,8 @@
 {% extends 'base.nunj' %}
 
 {% block main %}
-  {% if name %}
-    Welcome, {{ name }}! You have {{ karma }} karma.
+  {% if user %}
+    Welcome, {{ user.name }}! You have {{ user.karma }} karma.
     <br/>
     <a href="/logout">Logout</a>
   {% else %}

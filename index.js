@@ -65,18 +65,29 @@ nunjucks.configure('views', {
     express: app,
 });
 
-app.get('/', function(req, res) {
+function userObjectMiddleware(req, res, next) {
+  console.log("jarra", req.isAuthenticated())
   if (req.isAuthenticated()) {
-    mongo.findUser(req.user, function(err, user) {
-      res.render('index', {
-        name: user.name,
-        karma: user.karma }
-      );
+    mongo.findUser(req.user, (err, user) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        res.locals.user = user;
+      }
+      next();
     });
-  } else {
-    res.render('index');
   }
-});
+  else {
+    next();
+  }
+}
+
+// adds the user object to the responses 'locals' object
+// this is automatically available to templates
+app.use(userObjectMiddleware);
+
+app.get('/', (req, res) => res.render('index'));
 
 app.get('/login', function(req, res){
   res.send('<a href="/auth/google">Google</a>');
@@ -107,5 +118,5 @@ function ensureAuthenticated(req, res, next) {
 }
 
 app.listen(config.get('port'), function() {
-  console.log("Node app is running at localhost:" + config.get('port'))
+  console.log("Node app is running at localhost:" + config.get('port'));
 });
