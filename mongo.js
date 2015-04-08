@@ -25,17 +25,23 @@ var User = mongoose.model('Users', userSchema);
 var providerQuery = '{"auth.provider": provider, "auth.id": id}';
 
 var mongo = {
+  findUser: function(profile, callback) {
+    User.findOne(
+      { provider: profile.provider, id: profile.id },
+      function(err, res) { callBack(err, res, callback) }
+    );
+  },
   findOrCreateUser: function(profile, callback) {
     User.findOneAndUpdate(
       { provider: profile.provider, id: profile.id },
       { lastSeen: Date.now(), name: profile.name.givenName },
       { upsert: true },
-      function(err, res) { toCallback(err, res, callback) }
+      function(err, res) { callBack(err, res, callback) }
     );
   }
 }
 
-function toCallback(err, res, callback) {
+function callBack(err, res, callback) {
   if (!err) {
     callback(null, res);
   } else {

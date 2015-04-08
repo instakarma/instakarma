@@ -61,11 +61,12 @@ nunjucks.configure('views', {
 
 app.get('/', function(req, res) {
   if (req.isAuthenticated()) {
-    var show = {
-      name: req.user.name,
-      karma: req.user.karma
-    }
-    res.render('index', show);
+    mongo.findUser(req.user, function(err, user) {
+      res.render('index', {
+        name: user.name,
+        karma: user.karma }
+      );
+    });
   } else {
     res.render('index');
   }
@@ -87,7 +88,6 @@ app.get('/auth/google/callback',
 );
 
 app.get('/logout', function(req, res){
-  req.suchkarma = null;
   req.logout();
   res.redirect('/');
 });
