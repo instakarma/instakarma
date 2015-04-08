@@ -17,9 +17,7 @@ passport.use(new GoogleStrategy({
     callbackURL: callbackHost + '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      return done(null, profile);
-    });
+    mongo.findOrCreateUser(profile, done);
   }
 ));
 
@@ -64,8 +62,8 @@ nunjucks.configure('views', {
 app.get('/', function(req, res) {
   if (req.isAuthenticated()) {
     var show = {
-      name: req.user.name.givenName,
-      karma: 0 //TODO
+      name: req.user.name,
+      karma: req.user.karma
     }
     res.render('index', show);
   } else {

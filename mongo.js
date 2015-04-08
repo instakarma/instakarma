@@ -13,12 +13,11 @@ mongoose.connect(uristring, function (err, res) {
 });
 
 var userSchema = new mongoose.Schema({
-  username: { type: String, trim: true },
   karma: { type: Number, default: 0 },
-  auth: {
-    provider: String,
-    id: Number
-  }
+  provider: String,
+  id: Number,
+  lastSeen: Date,
+  name: { type: String, trim: true }
 });
 
 var User = mongoose.model('Users', userSchema);
@@ -26,23 +25,21 @@ var User = mongoose.model('Users', userSchema);
 var providerQuery = '{"auth.provider": provider, "auth.id": id}';
 
 var mongo = {
-  getUser: function(provider, id, cb) {
-    User.findOne(providerQuery, function(err, result) {
-      if (!err) {
-        cb(result);
-      } else {
-        cb(null);
-      }
-    });
-  },
-  setName: function(provider, id, username, cb) {
-    User.update(providerQuery, {username: username}, {upsert: true}, function(err) {
-      if (!err) {
-        cb(username);
-      } else {
-        cb(null);
-      }
-    });
+  findOrCreateUser: function(profile, callback) {
+    User.findOneAndUpdate(
+      { provider: profile.provider, id: profile.id },
+      { lastSeen: Date.now(), name: profile.name.givenName },
+      { upsert: true },
+      function(err, res) { toCallback(err, res, callback) }
+    );
+  }
+}
+
+function toCallback(err, res, callback) {
+  if (!err) {
+    callback(null, res);
+  } else {
+    callback(err, null);
   }
 }
 
