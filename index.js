@@ -2,10 +2,15 @@ const express         = require('express');
 const nunjucks        = require('nunjucks');
 const passport        = require('passport');
 const GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
+const morgan          = require('morgan');
+const cookieParser    = require('cookie-parser');
+const bodyParser      = require('body-parser');
+const session         = require('express-session');
+
 const mongo           = require('./mongo.js');
 const config          = require('./config.js');
-const app             = express();
 
+const app             = express();
 
 passport.use(new GoogleStrategy({
     clientID: config.get('googleClientID'),
@@ -25,17 +30,18 @@ passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-const morgan = require('morgan');
-app.use(morgan('tiny'));
+if (config.get('env') == 'development') {
+  app.use(morgan('dev'));
+}
+else {
+  app.use(morgan('common'));
+}
 
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -44,6 +50,7 @@ app.use(session({
 }));
 
 app.use(express.static('public'));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
