@@ -1,7 +1,7 @@
-var mongoose = require ('mongoose');
-var config   = require('./config.js');
+const mongoose = require ('mongoose');
+const config   = require('./config.js');
 
-var uristring = config.get('mongoUri');
+const uristring = config.get('mongoUri');
 
 mongoose.connect(uristring, function (err, res) {
   if (err) {
@@ -11,7 +11,7 @@ mongoose.connect(uristring, function (err, res) {
   }
 });
 
-var userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   karma: { type: Number, default: 0 },
   provider: String,
   id: Number,
@@ -19,15 +19,15 @@ var userSchema = new mongoose.Schema({
   name: { type: String, trim: true }
 });
 
-var User = mongoose.model('Users', userSchema);
+const User = mongoose.model('Users', userSchema);
 
-var providerQuery = '{"auth.provider": provider, "auth.id": id}';
+const providerQuery = '{"auth.provider": provider, "auth.id": id}';
 
-var mongo = {
+const mongo = {
   findUser: function(profile, callback) {
     User.findOne(
       { provider: profile.provider, id: profile.id },
-      function(err, res) { callBack(err, res, callback) }
+      (err, res) => callBack(err, res, callback)
     );
   },
   findOrCreateUser: function(profile, callback) {
@@ -35,7 +35,7 @@ var mongo = {
       { provider: profile.provider, id: profile.id },
       { lastSeen: Date.now(), name: profile.name.givenName },
       { upsert: true },
-      function(err, res) { callBack(err, res, callback) }
+      (err, res) => callBack(err, res, callback)
     );
   }
 }

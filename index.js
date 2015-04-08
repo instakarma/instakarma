@@ -1,10 +1,10 @@
-var express         = require('express');
-var nunjucks        = require('nunjucks');
-var passport        = require('passport');
-var GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
-var mongo           = require('./mongo.js');
-var config          = require('./config.js');
-var app             = express();
+const express         = require('express');
+const nunjucks        = require('nunjucks');
+const passport        = require('passport');
+const GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
+const mongo           = require('./mongo.js');
+const config          = require('./config.js');
+const app             = express();
 
 
 passport.use(new GoogleStrategy({
@@ -17,25 +17,25 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
+passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-var morgan = require('morgan');
+const morgan = require('morgan');
 app.use(morgan('tiny'));
 
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var session = require('express-session');
+const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
