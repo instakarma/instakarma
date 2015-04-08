@@ -2,19 +2,19 @@ var express         = require('express');
 var nunjucks        = require('nunjucks');
 var passport        = require('passport');
 var GoogleStrategy  = require('passport-google-oauth').OAuth2Strategy;
-var mongo           = require('./mongo.js')
+var mongo           = require('./mongo.js');
+var config          = require('./config.js');
 var app             = express();
 
-app.set('port', (process.env.PORT || 3000));
 
-var callbackHost        = process.env.CALLBACK_HOST || ('http://127.0.0.1:' + app.get('port'));
-var googleClientID      = process.env.GOOGLE_CLIENT_ID;
-var googleClientSecret  = process.env.GOOGLE_CLIENT_SECRET;
+// console.log(config.get('googleCallbackHost'));
+
+// process.exit(0)
 
 passport.use(new GoogleStrategy({
-    clientID: googleClientID,
-    clientSecret: googleClientSecret,
-    callbackURL: callbackHost + '/auth/google/callback'
+    clientID: config.get('googleClientID'),
+    clientSecret: config.get('googleClientSecret'),
+    callbackURL: config.get('googleCallbackHost') + '/auth/google/callback' //
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -102,6 +102,6 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
-})
+app.listen(config.get('port'), function() {
+  console.log("Node app is running at localhost:" + config.get('port'))
+});

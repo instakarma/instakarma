@@ -1,8 +1,7 @@
-var mongoose = require ("mongoose");
+var mongoose = require ('mongoose');
+var config   = require('./config.js');
 
-var uristring =
-  process.env.MONGOLAB_URI ||
-  'mongodb://localhost/test';
+var uristring = config.get('mongoUri');
 
 mongoose.connect(uristring, function (err, res) {
   if (err) {
