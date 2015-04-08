@@ -6,6 +6,7 @@ const morgan          = require('morgan');
 const cookieParser    = require('cookie-parser');
 const bodyParser      = require('body-parser');
 const session         = require('express-session');
+const favicon         = require('serve-favicon');
 
 const mongo           = require('./mongo.js');
 const config          = require('./config.js');
@@ -48,6 +49,8 @@ app.use(session({
   saveUninitialized: true,
   cookie: {}
 }));
+
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(express.static('public'));
 
