@@ -51,7 +51,7 @@ app.set('view engine', 'nunj');
 
 nunjucks.configure('views', {
     autoescape: true,
-    watch: true,
+    watch: config.get('env') == 'development',
     express: app,
 });
 
