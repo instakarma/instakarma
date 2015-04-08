@@ -31,35 +31,35 @@ var conf = convict({
   host: {
     doc: 'The self host',
     format: String,
-    default: '127.0.0.1',
+    default: '127.0.0.1'
   },
 
   mongoUri: {
     doc: 'URI to connect to mongdb instance',
     format: String,
-    default: 'mongodb://localhost/test'
-    env: 'MONGOLAB_URI',
+    default: 'mongodb://localhost/test',
+    env: 'MONGOLAB_URI'
   },
 
   googleCallbackHost: {
     doc: 'Callback host verified by google',
-    format: String
+    format: String,
     default: "",
-    env: 'CALLBACK_HOST',
+    env: 'CALLBACK_HOST'
   },
 
   googleClientID: {
     doc: 'Client ID assigned by google to the app',
-    format: cantBeBlank
+    format: cantBeBlank,
     default: "",
-    env: 'GOOGLE_CLIENT_ID',
+    env: 'GOOGLE_CLIENT_ID'
   },
 
   googleClientSecret: {
     doc: 'Client secret assigned by google to the app',
-    format: cantBeBlank
+    format: cantBeBlank,
     default: "",
-    env: 'GOOGLE_CLIENT_SECRET',
+    env: 'GOOGLE_CLIENT_SECRET'
   }
 });
 
