@@ -2,6 +2,9 @@
   "name": "suchkarma",
   "description": "Track dat karma",
   "version": "0.0.1",
+  "scripts": {
+    "start": "node runner.js"
+  },
   "dependencies": {
     "babel": "^5.0.12",
     "body-parser": "^1.12.2",
