@@ -7,10 +7,6 @@ var config          = require('./config.js');
 var app             = express();
 
 
-// console.log(config.get('googleCallbackHost'));
-
-// process.exit(0)
-
 passport.use(new GoogleStrategy({
     clientID: config.get('googleClientID'),
     clientSecret: config.get('googleClientSecret'),
