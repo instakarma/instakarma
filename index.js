@@ -18,7 +18,7 @@ passport.use(new GoogleStrategy({
     clientSecret: config.get('googleClientSecret'),
     callbackURL: config.get('googleCallbackHost') + '/auth/google/callback' //
   },
-  function(accessToken, refreshToken, profile, done) {
+  (accessToken, refreshToken, profile, done) => {
     mongo.findOrCreateUser(profile, done);
   }
 ));
@@ -65,8 +65,9 @@ nunjucks.configure('views', {
     express: app,
 });
 
+// adds the user object to the responses 'locals' object
+// this is automatically available to templates
 function userObjectMiddleware(req, res, next) {
-  console.log("jarra", req.isAuthenticated())
   if (req.isAuthenticated()) {
     mongo.findUser(req.user, (err, user) => {
       if (err) {
@@ -83,13 +84,11 @@ function userObjectMiddleware(req, res, next) {
   }
 }
 
-// adds the user object to the responses 'locals' object
-// this is automatically available to templates
 app.use(userObjectMiddleware);
 
 app.get('/', (req, res) => res.render('index'));
 
-app.get('/login', function(req, res){
+app.get('/login', (req, res) => {
   res.send('<a href="/auth/google">Google</a>');
 });
 
@@ -104,7 +103,7 @@ app.get('/auth/google/callback',
   })
 );
 
-app.get('/logout', function(req, res){
+app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
@@ -117,6 +116,7 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.listen(config.get('port'), function() {
+
+app.listen(config.get('port'), () => {
   console.log("Node app is running at localhost:" + config.get('port'));
 });
