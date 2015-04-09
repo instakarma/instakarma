@@ -91,12 +91,12 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/gief', (req, res) => {
-  if (req.body.to && req.body.karma) {
-    const transaction = {
-      to: req.body.to,
-      from: res.locals.user.email,
-      karma: req.body.karma
-    }
+  const transaction = {
+    to: req.body.to,
+    from: res.locals.user.email,
+    karma: req.body.karma
+  } 
+  if (transaction.to && transaction.karma && transaction.karma > 0) {
     mongo.transact(transaction, (err, data) => {
       if (!err) {
         res.redirect('/');

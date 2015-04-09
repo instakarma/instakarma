@@ -5,7 +5,7 @@
     Welcome, {{ user.name }}! You have {{ user.karma }} karma. 
     <br/>
     <form action="/gief" method="POST">
-    	Give <input type="number" name="karma" value="1">
+    	Give <input type="number" min="1" name="karma" value="1">
     	karma to <input type="email" name="to">
     	<input type="submit" value="Give karma">
     </form>
