@@ -49,31 +49,39 @@ const mongo = {
       (err, res) => callBack(err, res, callback)
     );
   },
-  giveKarma: (transaction, callback) => {
-    const data = new Transaction(transaction);
-    data.save((err, data) => {
+  transact: (transaction, callback) => {
+    const trans = new Transaction(transaction);
+    trans.save((err, data) => {
       if (!err) {
-        User.findOneAndUpdate(
-          { email: transaction.to },
-          { $inc: { karma: transaction.karma } },
-          { upsert: true },
-          (err, res) => {
-            if (!err) {
-              User.update(
-                { email: transaction.from }, 
-                { $inc: { karma: -transaction.karma } },
-                (err, res) => callBack(err, data, callback)
-              );
-            } else {
-              callback(err, null);
-            }
+        giveKarma(transaction, (err, res) => {
+          if (!err) {
+            takeKarma(transaction, (err, res) => callBack(err, data, callback));
+          } else {
+            callback(err, null);
           }
-        )
+        });
       } else {
         callback(err, null);
       }
     });
   }
+}
+
+function takeKarma(transaction, callback) {
+  User.update(
+    { email: transaction.from }, 
+    { $inc: { karma: -transaction.karma } },
+    (err, res) => callBack(err, res, callback)
+  );
+}
+
+function giveKarma(transaction, callback) {
+  User.update(
+    { email: transaction.to },
+    { $inc: { karma: transaction.karma } },
+    { upsert: true },
+    (err, res) => callBack(err, res, callback)
+  );   
 }
 
 function callBack(err, res, callback) {

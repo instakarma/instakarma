@@ -97,9 +97,9 @@ app.post('/gief', (req, res) => {
       from: res.locals.user.email,
       karma: req.body.karma
     }
-    mongo.giveKarma(transaction, (err, data) => {
+    mongo.transact(transaction, (err, data) => {
       if (!err) {
-        res.render('index');
+        res.redirect('/');
       } else {
         res.sendStatus(500);
       }
