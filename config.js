@@ -63,13 +63,17 @@ var conf = convict({
   }
 });
 
+try {
+  conf.loadFile("./secrets.json");
+}
+catch (e) {
+  // no secrets file. That's OK. It'll use the env vars then
+}
+
 // If we need a file with config for dev/test/whatevs, we can load it
 // and merge it with the other settings like so:
 // var env = conf.get('env');
 // conf.loadFile('./config/' + env + '.json');
-
-// It's also possible to have a .secrets.json with keys and things that
-// is added to .gitignore, so you don't need to set env vars locally
 
 conf.validate();
 
