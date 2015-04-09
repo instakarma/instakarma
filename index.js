@@ -96,7 +96,7 @@ app.post('/gief', (req, res) => {
     from: res.locals.user.email,
     karma: req.body.karma
   } 
-  if (transaction.to && transaction.karma && transaction.karma > 0) {
+  if (transaction.to && transaction.karma > 0) {
     mongo.transact(transaction, (err, data) => {
       if (!err) {
         res.redirect('/');
