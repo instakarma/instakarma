@@ -34,30 +34,43 @@ const User = mongoose.model('Users', userSchema);
 const Transaction = mongoose.model('Transactions', transactionSchema);
 
 const mongo = {
-  findUser: (profile, callback) => {
+  findUser: (user, callback) => {
     User.findOne(
-      { provider: profile.provider, id: profile.id },
+      { email: user.email },
       (err, res) => callBack(err, res, callback)
     );
   },
   findOrCreateUser: (profile, callback) => {
+    const email = profile.emails[0].value
     const user = User.findOneAndUpdate( 
-      { email: profile.emails[0].value },
-      { lastSeen: Date.now(), name: profile.displayName },
+      { email: email},
+      { lastSeen: Date.now(), name: profile.displayName, email: email },
       { upsert: true },
       (err, res) => callBack(err, res, callback)
     );
   },
   giveKarma: (transaction, callback) => {
     const data = new Transaction(transaction);
-    data.save((err, res) => {
+    data.save((err, data) => {
       if (!err) {
         User.findOneAndUpdate(
           { email: transaction.to },
           { $inc: { karma: transaction.karma } },
           { upsert: true },
-          (err, res) => callBack(err, res, callback)
+          (err, res) => {
+            if (!err) {
+              User.update(
+                { email: transaction.from }, 
+                { $inc: { karma: -transaction.karma } },
+                (err, res) => callBack(err, data, callback)
+              );
+            } else {
+              callback(err, null);
+            }
+          }
         )
+      } else {
+        callback(err, null);
       }
     });
   }
