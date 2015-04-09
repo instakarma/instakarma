@@ -15,18 +15,23 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const userSchema = new mongoose.Schema({
   karma: { type: Number, default: 0 },
-  uid: { type: String, default: new ObjectId, index: true },
+  email: { type: String, index: true },
   provider: String,
   id: Number,
   lastSeen: Date,
   name: { type: String, trim: true }
 });
-
 userSchema.index({ provider: 1, id: 1 });
 
-const User = mongoose.model('Users', userSchema);
+const transactionSchema = new mongoose.Schema({
+  from: String,
+  to: String,
+  karma: Number,
+  when: { type: Date, default: () => Date.now() }
+});
 
-const providerQuery = '{"auth.provider": provider, "auth.id": id}';
+const User = mongoose.model('Users', userSchema);
+const Transaction = mongoose.model('Transactions', transactionSchema);
 
 const mongo = {
   findUser: (profile, callback) => {
@@ -36,12 +41,25 @@ const mongo = {
     );
   },
   findOrCreateUser: (profile, callback) => {
-    User.findOneAndUpdate(
-      { provider: profile.provider, id: profile.id },
-      { lastSeen: Date.now(), name: profile.name.givenName },
+    const user = User.findOneAndUpdate( 
+      { email: profile.emails[0].value },
+      { lastSeen: Date.now(), name: profile.displayName },
       { upsert: true },
       (err, res) => callBack(err, res, callback)
     );
+  },
+  giveKarma: (transaction, callback) => {
+    const data = new Transaction(transaction);
+    data.save((err, res) => {
+      if (!err) {
+        User.findOneAndUpdate(
+          { email: transaction.to },
+          { $inc: { karma: transaction.karma } },
+          { upsert: true },
+          (err, res) => callBack(err, res, callback)
+        )
+      }
+    });
   }
 }
 

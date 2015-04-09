@@ -69,11 +69,11 @@ nunjucks.configure('views', {
 // this is automatically available to templates
 function userObjectMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
-    mongo.findUser(req.user, (err, user) => {
+    mongo.findUser(req.user, (err, data) => {
       if (err) {
         console.log(err);
       } else {
-        res.locals.user = user;
+        res.locals.user = data;
       }
       next();
     });
@@ -90,8 +90,30 @@ app.get('/login', (req, res) => {
   res.send('<a href="/auth/google">Google</a>');
 });
 
+app.post('/gief', (req, res) => {
+  if (req.body.to && req.body.karma) {
+    const transaction = {
+      to: req.body.to,
+      from: res.locals.user.email,
+      karma: req.body.karma
+    }
+    mongo.giveKarma(transaction, (err, data) => {
+      if (!err) {
+        res.render('index');
+      } else {
+        res.sendStatus(500);
+      }
+    });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 app.get('/auth/google',
-  passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/plus.login']})
+  passport.authenticate('google', {scope: [
+    'https://www.googleapis.com/auth/plus.login',
+    'https://www.googleapis.com/auth/userinfo.email'
+  ]})
 );
 
 app.get('/auth/google/callback',
