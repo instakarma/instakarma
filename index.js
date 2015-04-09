@@ -72,14 +72,12 @@ function userObjectMiddleware(req, res, next) {
     mongo.findUser(req.user, (err, user) => {
       if (err) {
         console.log(err);
-      }
-      else {
+      } else {
         res.locals.user = user;
       }
       next();
     });
-  }
-  else {
+  } else {
     next();
   }
 }
