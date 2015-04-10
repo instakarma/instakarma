@@ -73,12 +73,4 @@ function giveKarma(transaction) {
   );   
 }
 
-function callBack(err, res, callback) {
-  if (!err) {
-    callback(null, res);
-  } else {
-    callback(err, null);
-  }
-}
-
 module.exports = mongo;
