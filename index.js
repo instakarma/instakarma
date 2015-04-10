@@ -101,7 +101,7 @@ app.post('/gief', (req, res) => {
     // https://github.com/aheckmann/mpromise/issues/15
     mongo
       .transact(transaction)
-      .then((e => res.redirect('/')), (e => res.status(500).send(e)));
+      .then((e => res.redirect('/me')), (e => res.status(500).send(e)));
   } else {
     res.sendStatus(400);
   }
@@ -125,7 +125,7 @@ app.get('/auth/google/callback',
       req.session.returnPath = null;
       res.redirect(rp);
     } else {
-      res.redirect('/');
+      res.redirect('/me');
     }
     next();
   }
@@ -144,10 +144,27 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-// Example of resource requireing login
-// app.get('/me', ensureAuthenticated, (req, res) => {
-//     res.render('profile');
-// });
+app.get('/me',
+  ensureAuthenticated,
+  (req, res) => {
+    var x;
+    res.render('me', {
+      friends: [
+        {name: "Frank", email: "frank@example.org"},
+        {name: "Sverre", email: "sverre@example.org"},
+        {name: "David", email: "david@example.org"},
+        {name: "Kåre", email: "kaare@example.org"},
+        {name: "Nina", email: "nina@example.org"},
+      ],
+      transactions: [
+        {direction: "gave", to: "Frank", ammount: 1, timestamp: new Date()},
+        {direction: "gave", to: "Kåre", ammount: 2, timestamp: new Date()},
+        {direction: "got", to: "David", ammount: 1, timestamp: new Date()},
+        {direction: "gave", to: "Sverre", ammount: 1, timestamp: new Date()},
+        {direction: "got", to: "Nina", ammount: 2, timestamp: new Date()},
+      ]
+    });
+});
 
 app.listen(config.get('port'), () => {
   console.log("Node app is running at localhost:" + config.get('port'));

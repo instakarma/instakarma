@@ -1,0 +1,49 @@
+{% extends 'base.nunj' %}
+
+{% block main %}
+    <div class="row">
+        <div class="seven columns">
+            <h3>Give karma</h3>
+            <form action="/gief" method="POST">
+                <div class="row">
+                    <div class="three columns">
+                        <label>Give:</label>
+                        <div>
+                            <input placeholder="karma" name="karma" value="1" style="width: 100%;" type="number">
+                        </div>
+                    </div>
+                    <div class="eight columns offset-by-one column">
+                        <label>To:</label>
+                        <div>
+                            <input placeholder="friend" type="email" name="to" style="width: 100%;" type="number">
+                        </div>
+                    </div>
+                </div> <!-- lol -->
+                <div class="row">
+                    <div class="two-thirds column">
+                        <button type="submit">Give karma</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+        <div class="four columns offset-by-one column">
+
+            <h6><a href="#">Recent transactions</a></h6>
+        
+            <ol>
+                {% for t in transactions %}
+                    <li>
+                        {% if t.direction == "gave" %}
+                            <strong>Gave</strong> {{ t.to }} {{ t.ammount | abs}} karma
+                            <small>n minutes ago</small>
+                        {% else %}
+                            <strong>Got</strong> {{ t.to }} {{ t.ammount | abs}} karma
+                            <small>n minutes ago</small>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% endblock %}
