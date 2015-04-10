@@ -20,7 +20,9 @@ passport.use(new GoogleStrategy({
   },
   (accessToken, refreshToken, profile, done) => {
     console.log(profile);
-    mongo.findOrCreateUser(profile, done);
+    mongo
+      .findOrCreateUser(profile)
+      .then(e => done(null, e), done);
   }
 ));
 
@@ -70,14 +72,11 @@ nunjucks.configure('views', {
 // this is automatically available to templates
 function userObjectMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
-    mongo.findUser(req.user, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.locals.user = data;
-      }
-      next();
-    });
+    mongo
+      .findUser(req.user)
+      .then(e => res.locals.user = e)
+      .then(null, e => console.log("findUser error:", e))
+      .then(e => next())
   } else {
     next();
   }
@@ -98,13 +97,11 @@ app.post('/gief', (req, res) => {
     karma: req.body.karma
   } 
   if (transaction.to && transaction.karma > 0) {
-    mongo.transact(transaction, (err, data) => {
-      if (!err) {
-        res.redirect('/');
-      } else {
-        res.sendStatus(500);
-      }
-    });
+    // note: should've used .catch on promise, but not supperted. see
+    // https://github.com/aheckmann/mpromise/issues/15
+    mongo
+      .transact(transaction)
+      .then((e => res.redirect('/')), (e => res.status(500).send(e)));
   } else {
     res.sendStatus(400);
   }
