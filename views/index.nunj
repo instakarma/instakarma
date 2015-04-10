@@ -1,16 +1,43 @@
 {% extends 'base.nunj' %}
 
+{#% block header %}{% endblock %#}
+
 {% block main %}
-  {% if user %}
-    Welcome, {{ user.name }}! You have {{ user.karma }} karma. 
-    <br/>
-    <form action="/gief" method="POST">
-    	Give <input type="number" min="1" name="karma" value="1">
-    	karma to <input type="email" name="to">
-    	<input type="submit" value="Give karma">
-    </form>
-    <a href="/logout">Logout</a>
-  {% else %}
-    <a href="/login">Login</a>
-  {% endif %}
+
+<div class="row">
+  <div class="two-thirds column" style="margin-top: 15%">
+    <h4>
+        <img alt="Such karma" src="suchkarma.png" height="128" width="128">
+    </h4>
+
+    {% if user %}
+        Welcome, {{ user.name }}! You have {{ user.karma }} karma.
+        <br/>
+        <form action="/gief" method="POST">
+            Give <input type="number" min="1" name="karma" value="1">
+            karma to <input type="email" name="to">
+            <input type="submit" value="Give karma">
+        </form>
+        <a href="/logout">Logout</a>
+    {% else %}
+
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
+            unde commodi voluptates accusamus impedit error iste at cupiditate
+            temporibus magnam! Iste cumque velit libero. Facere itaque alias
+            tempore libero aliquid.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
+            unde commodi voluptates accusamus impedit error iste at cupiditate
+            temporibus magnam! Iste cumque velit libero. Facere itaque alias
+            tempore libero aliquid.
+        </p>
+        <a href="/login">Log in or join!</a>
+
+    {% endif %}
+
+  </div>
+</div>
+
 {% endblock %}

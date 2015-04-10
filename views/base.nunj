@@ -1,53 +1,42 @@
 <!DOCTYPE html>
-<title>suchkarma</title>
+<head>
+    <meta charset="utf-8">
+    <title>suchkarma</title>
 
-<style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style/normalize.css">
+    <link rel="stylesheet" href="/style/skeleton.css">
+    <link rel="stylesheet" href="/style/custom.css">
+</head>
 
-body {
-    font-family: sans-serif;
-    padding: 0;
-    margin: 0;
-}
+{% block header %}
 
-section {
-    margin: 1em;
-}
-
-.top-bar {
-    background-color: papayawhip;
-}
-
-.top-bar .top-bar__floater {
-    float: right;
-    vertical-align: middle;
-}
-
-.avatar {
-    border-radius: 50%;
-}
-
-</style>
-
-<header class="top-bar">
-    <a href="/">
-        <img src="suchkarma.png" width="50" height="50">
-    </a>
-
-    {% if user %}    
-        <span class="top-bar__floater">
-            <a href="/me">{{ user.name }}</a> | 
-            <strong>{{ user.karma }} karma</strong>
-            <img class="avatar" src="{{ user.avatar }}">
-        </span>
-    {% endif %}
-
+<header>
+    <div class="container">
+        <div class="row">
+          <div class="twelve columns top-bar">
+            {% if user %}
+                <span class="u-pull-right top-bar__floater">
+                    <a href="/me">{{ user.name }}</a> |
+                    <strong>{{ user.karma }} karma</strong>
+                    <img class="avatar" src="{{ user.avatar }}">
+                </span>
+            {% endif %}
+          </div>
+        </div>
+    </div>
 </header>
 
-<section>
-    {% block main %}{% endblock %}
-</section>
+{% endblock %}
 
-<footer>
-    <hr>
-    Footar!
-</footer>
+<div class="container">
+    
+    {% block main %}
+    {% endblock %}
+
+    <footer>
+        <small>blah blah &trade; &copy;</small>
+    </footer>
+
+</div>
+
