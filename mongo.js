@@ -16,6 +16,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const userSchema = new mongoose.Schema({
   karma: { type: Number, default: 0 },
   email: { type: String, index: true },
+  avatar: String,
   provider: String,
   id: Number,
   lastSeen: Date,
@@ -41,10 +42,11 @@ const mongo = {
     );
   },
   findOrCreateUser: (profile, callback) => {
-    const email = profile.emails[0].value
+    const email = profile.emails[0].value;
+    const avatar = profile.photos[0].value;
     const user = User.findOneAndUpdate( 
-      { email: email},
-      { lastSeen: Date.now(), name: profile.displayName, email: email },
+      { email: email },
+      { lastSeen: Date.now(), name: profile.displayName, avatar, email },
       { upsert: true },
       (err, res) => callBack(err, res, callback)
     );
