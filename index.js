@@ -19,6 +19,7 @@ passport.use(new GoogleStrategy({
     callbackURL: config.get('googleCallbackHost') + '/auth/google/callback' //
   },
   (accessToken, refreshToken, profile, done) => {
+    console.log(profile);
     mongo.findOrCreateUser(profile, done);
   }
 ));
@@ -109,11 +110,8 @@ app.post('/gief', (req, res) => {
   }
 });
 
-app.get('/auth/google',
-  passport.authenticate('google', {scope: [
-    'https://www.googleapis.com/auth/plus.login',
-    'https://www.googleapis.com/auth/userinfo.email'
-  ]})
+app.get('/auth/google', 
+  passport.authenticate('google', {scope: ['profile', 'email']})
 );
 
 app.get('/auth/google/callback',
