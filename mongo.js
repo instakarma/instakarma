@@ -35,11 +35,11 @@ const User = mongoose.model('Users', userSchema);
 const Transaction = mongoose.model('Transactions', transactionSchema);
 
 const mongo = {
-  findUser: (user, callback) => {
+  findUser(user, callback) {
     return User.findOne({ email: user.email });
   },
 
-  findOrCreateUser: (profile) => {
+  findOrCreateUser(profile) {
     const email = profile.emails[0].value;
     const avatar = profile.photos[0].value;
     return User.findOneAndUpdate(
@@ -49,7 +49,7 @@ const mongo = {
     );
   },
 
-  transact: (transaction) => {
+  transact(transaction) {
     const trans = new Transaction(transaction);
     return trans
       .save()
