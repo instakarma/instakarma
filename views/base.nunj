@@ -15,6 +15,10 @@
     <div class="container">
         <div class="row">
           <div class="twelve columns top-bar">
+            <a href="/">
+                <img alt="Such karma" src="suchkarma.png" height="128" width="128">
+            </a>
+
             {% if user %}
                 <span class="u-pull-right top-bar__floater">
                     <a href="/me">{{ user.name }}</a> |
@@ -30,7 +34,7 @@
 {% endblock %}
 
 <div class="container">
-    
+
     {% block main %}
     {% endblock %}
 
