@@ -1,0 +1,8 @@
+{% extends 'base.nunj' %}
+
+{% block main %}
+    <form action="/auth/google">
+        <input type="hidden" name="returnPath" value="{{ returnPath }}">
+        <button type="submit">Log in with Google</button>
+    </form>
+{% endblock %}

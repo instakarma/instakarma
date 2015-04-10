@@ -16,7 +16,7 @@ const app             = express();
 passport.use(new GoogleStrategy({
     clientID: config.get('googleClientID'),
     clientSecret: config.get('googleClientSecret'),
-    callbackURL: config.get('googleCallbackHost') + '/auth/google/callback' //
+    callbackURL: config.get('googleCallbackHost') + '/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
     console.log(profile);
@@ -88,7 +88,7 @@ app.use(userObjectMiddleware);
 app.get('/', (req, res) => res.render('index'));
 
 app.get('/login', (req, res) => {
-  res.send('<a href="/auth/google">Google</a>');
+  res.render('login', { returnPath: req.query.returnPath });
 });
 
 app.post('/gief', (req, res) => {
@@ -111,14 +111,27 @@ app.post('/gief', (req, res) => {
 });
 
 app.get('/auth/google', 
+  (req, res, next) => {
+    req.session.returnPath = req.query.returnPath;
+    next();
+  },
   passport.authenticate('google', {scope: ['profile', 'email']})
 );
 
 app.get('/auth/google/callback',
   passport.authenticate('google', {
-    successRedirect: '/',
     failureRedirect: '/login'
-  })
+  }),
+  (req, res, next) => {
+    if (req.session.returnPath) {
+      const rp = req.session.returnPath;
+      req.session.returnPath = null;
+      res.redirect(rp);
+    } else {
+      res.redirect('/');
+    }
+    next();
+  }
 );
 
 app.get('/logout', (req, res) => {
@@ -128,12 +141,16 @@ app.get('/logout', (req, res) => {
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return next();
+    next();
   } else {
-    res.redirect('/login');
+    res.redirect('/login?returnPath=' + escape(req.originalUrl));
   }
 }
 
+// Example of resource requireing login
+// app.get('/me', ensureAuthenticated, (req, res) => {
+//     res.render('profile');
+// });
 
 app.listen(config.get('port'), () => {
   console.log("Node app is running at localhost:" + config.get('port'));
