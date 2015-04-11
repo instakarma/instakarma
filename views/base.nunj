@@ -4,6 +4,9 @@
     <title>suchkarma</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" href="/style/normalize.css">
     <link rel="stylesheet" href="/style/skeleton.css">
     <link rel="stylesheet" href="/style/custom.css">
@@ -16,7 +19,7 @@
         <div class="row">
           <div class="twelve columns top-bar">
             <a href="/">
-                <img alt="Such karma" src="suchkarma.png" height="128" width="128">
+                <img id="logo" alt="Such karma" src="suchkarma.png" height="128" width="128">
             </a>
 
             {% if user %}
