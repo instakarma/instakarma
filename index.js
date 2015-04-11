@@ -7,6 +7,7 @@ const cookieParser    = require('cookie-parser');
 const bodyParser      = require('body-parser');
 const session         = require('express-session');
 const favicon         = require('serve-favicon');
+const moment          = require('moment');
 
 const mongo           = require('./mongo.js');
 const config          = require('./config.js');
@@ -19,7 +20,6 @@ passport.use(new GoogleStrategy({
     callbackURL: config.get('googleCallbackHost') + '/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
-    console.log(profile);
     mongo
       .findOrCreateUser(profile)
       .then(e => done(null, e), done);
@@ -76,7 +76,7 @@ function userObjectMiddleware(req, res, next) {
       .findUser(req.user)
       .then(e => res.locals.user = e)
       .then(null, e => console.log("findUser error:", e))
-      .then(e => next())
+      .then(e => next());
   } else {
     next();
   }
@@ -144,27 +144,34 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.get('/me',
-  ensureAuthenticated,
-  (req, res) => {
-    var x;
-    res.render('me', {
-      friends: [
-        {name: "Frank", email: "frank@example.org"},
-        {name: "Sverre", email: "sverre@example.org"},
-        {name: "David", email: "david@example.org"},
-        {name: "Kåre", email: "kaare@example.org"},
-        {name: "Nina", email: "nina@example.org"},
-      ],
-      transactions: [
-        {direction: "gave", to: "Frank", ammount: 1, timestamp: new Date()},
-        {direction: "gave", to: "Kåre", ammount: 2, timestamp: new Date()},
-        {direction: "got", to: "David", ammount: 1, timestamp: new Date()},
-        {direction: "gave", to: "Sverre", ammount: 1, timestamp: new Date()},
-        {direction: "got", to: "Nina", ammount: 2, timestamp: new Date()},
-      ]
-    });
+app.get('/me', ensureAuthenticated, (req, res) => {
+  mongo
+    .getTransactions(res.locals.user)
+    .then(dts => toViewTransactions(res.locals.user, dts))
+    .then(vts => 
+      res.render('me', {
+        friends: [
+          {name: "Frank", email: "frank@example.org"},
+          {name: "Sverre", email: "sverre@example.org"},
+          {name: "David", email: "david@example.org"},
+          {name: "Kåre", email: "kaare@example.org"},
+          {name: "Nina", email: "nina@example.org"},
+        ],
+        transactions: vts
+      })
+    );
 });
+
+function toViewTransactions(user, dbTransactions) {
+  return dbTransactions.map((t) => {
+    var direction = 'got';
+    if (t.from === user.email) {
+      direction = 'gave';
+    }
+    const fromNow = moment(t.when).fromNow()
+    return {direction: direction, to: t.to, from: t.from, amount: t.karma, ago: fromNow};
+  });
+}
 
 app.listen(config.get('port'), () => {
   console.log("Node app is running at localhost:" + config.get('port'));

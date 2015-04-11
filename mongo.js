@@ -35,7 +35,7 @@ const User = mongoose.model('Users', userSchema);
 const Transaction = mongoose.model('Transactions', transactionSchema);
 
 const mongo = {
-  findUser(user, callback) {
+  findUser(user) {
     return User.findOne({ email: user.email });
   },
 
@@ -55,6 +55,13 @@ const mongo = {
       .save()
       .then(e => giveKarma(transaction))
       .then(e => takeKarma(transaction));
+  },
+
+  getTransactions(user) {
+    return Transaction
+      .find({ $or: [{ from: user.email }, { to: user.email }] })
+      .limit(5)
+      .sort('-when');
   }
 }
 

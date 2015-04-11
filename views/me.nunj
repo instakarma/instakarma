@@ -38,11 +38,11 @@
                 {% for t in transactions %}
                     <li>
                         {% if t.direction == "gave" %}
-                            <strong>Gave</strong> {{ t.to }} {{ t.ammount | abs}} karma
-                            <small>n minutes ago</small>
+                            <strong>Gave</strong> {{ t.to }} {{ t.amount | abs}} karma
+                            <small>{{ t.ago }}</small>
                         {% else %}
-                            <strong>Got</strong> {{ t.to }} {{ t.ammount | abs}} karma
-                            <small>n minutes ago</small>
+                            <strong>Got</strong> {{ t.to }} {{ t.amount | abs}} karma
+                            <small>{{ t.ago }}</small>
                         {% endif %}
                     </li>
                 {% endfor %}
