@@ -1,16 +1,23 @@
-    body {
-        background-color: papayawhip;
-        padding-top: 2em;
-    }
+body {
+    background-color: papayawhip;
+    padding-top: 1.5%;
+}
 
-    .drop-top {
-         margin-top: 10%;
-    }
+.drop-top {
+     margin-top: 10%;
+}
 
-    .top-bar {
- 
-    }
+.top-bar {
 
-    .avatar {
-        border-radius: 50%;
+}
+
+.avatar {
+    border-radius: 50%;
+}
+
+@media (max-width: 550px) {
+    #logo {
+        width: 20%;
+        height: auto;
     }
+}
