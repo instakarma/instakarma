@@ -3,22 +3,24 @@
 {% block main %}
 
 <div class="row">
-  <div class="two-thirds column drop-top">
+    <div class="two-thirds column drop-top">
 
-    <h2>Log in</h2>
+        <h2>Log in</h2>
 
-    <p>
-        Log in with one of the abailable providers:
-    </p>
+        <p>
+            Log in with one of the abailable providers:
+        </p>
 
-    <form action="/auth/google">
-        <input type="hidden" name="returnPath" value="{{ returnPath }}">
-        <button type="submit">Log in with Google</button>
-    </form>
+        <form action="/auth/google">
+            <input type="hidden" name="returnPath" value="{{ returnPath }}">
+            <button type="submit">Log in with Google</button>
+        </form>
 
-    <form action="/auth/debug">
-        <input type="hidden" name="returnPath" value="{{ returnPath }}">
-        <button type="submit">Log in with non-extant local debug</button>
-    </form>
+        <form action="/auth/debug">
+            <input type="hidden" name="returnPath" value="{{ returnPath }}">
+            <button type="submit">Log in with non-extant local debug</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
