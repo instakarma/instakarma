@@ -41,7 +41,7 @@
                             <strong>Gave</strong> {{ t.to }} {{ t.amount | abs}} karma
                             <small>{{ t.ago }}</small>
                         {% else %}
-                            <strong>Got</strong> {{ t.to }} {{ t.amount | abs}} karma
+                            <strong>Got</strong> {{ t.from }} {{ t.amount | abs}} karma
                             <small>{{ t.ago }}</small>
                         {% endif %}
                     </li>
