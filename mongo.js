@@ -51,7 +51,7 @@ const mongo = {
       { email: email },
       { lastSeen: Date.now(), name: profile.name.givenName,
         avatar, email, id: shortid.generate() },
-      { upsert: true }
+      { upsert: true, new: true }
     );
   },
 
