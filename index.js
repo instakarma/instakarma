@@ -7,10 +7,10 @@ const cookieParser    = require('cookie-parser');
 const bodyParser      = require('body-parser');
 const session         = require('express-session');
 const favicon         = require('serve-favicon');
-const moment          = require('moment');
 
 const mongo           = require('./mongo.js');
 const config          = require('./config.js');
+const filterMap       = require('./filters.js')
 
 const app             = express();
 
@@ -62,10 +62,14 @@ app.use(passport.session());
 
 app.set('view engine', 'nunj');
 
-nunjucks.configure('views', {
+const env = nunjucks.configure('views', {
     autoescape: true,
     watch: config.get('env') == 'development',
     express: app,
+});
+
+Object.keys(filterMap).forEach((name) => {
+  env.addFilter(name, filterMap[name])
 });
 
 // adds the user object to the responses 'locals' object
@@ -96,7 +100,7 @@ app.post('/gief', (req, res) => {
     from: res.locals.user.email,
     karma: req.body.karma
   } 
-  if (transaction.to && transaction.karma > 0) {
+  if (transaction.to != transaction.from && transaction.karma > 0) {
     // note: should've used .catch on promise, but not supperted. see
     // https://github.com/aheckmann/mpromise/issues/15
     mongo
@@ -145,32 +149,41 @@ function ensureAuthenticated(req, res, next) {
 }
 
 app.get('/me', ensureAuthenticated, (req, res) => {
-  mongo
-    .getTransactions(res.locals.user)
-    .then(dts => toViewTransactions(res.locals.user, dts))
-    .then(vts => 
-      res.render('me', {
-        friends: [
-          {name: "Frank", email: "frank@example.org"},
-          {name: "Sverre", email: "sverre@example.org"},
-          {name: "David", email: "david@example.org"},
-          {name: "Kåre", email: "kaare@example.org"},
-          {name: "Nina", email: "nina@example.org"},
-        ],
-        transactions: vts
-      })
-    );
+  const user = res.locals.user;
+  Promise.all([
+    mongo
+      .getTransactions(user)
+      .then(ts => toViewTransactions(user, ts)),
+    mongo
+      .getOtherParties(user)
+      .then(ps => toViewRecents(user, ps))
+  ]).then(data => {
+    console.log(data[0]);
+    res.render('me', { transactions: data[0], friends: data[1] })
+  });
 });
 
+function gatherUserData(user) {
+  mongo
+    .getTransactions(user)
+    .then(ts => {
+      viewTransactions: toViewTransactions(user, ts)
+    });
+
+}
+
 function toViewTransactions(user, dbTransactions) {
-  return dbTransactions.map((t) => {
-    var direction = 'got';
-    if (t.from === user.email) {
-      direction = 'gave';
+  return dbTransactions.map(t => {
+    if (t.karma < 0) {
+      return {direction: 'got', to: t.from, from: t.to, amount: -t.karma, timestamp: t.when};
+    } else {
+      return {direction: 'gave', to: t.to, from: t.from, amount: t.karma, timestamp: t.when};
     }
-    const fromNow = moment(t.when).fromNow()
-    return {direction: direction, to: t.to, from: t.from, amount: t.karma, ago: fromNow};
   });
+}
+
+function toViewRecents(user, dbRecents) {
+  return dbRecents.reverse();
 }
 
 app.listen(config.get('port'), () => {

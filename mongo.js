@@ -44,35 +44,43 @@ const mongo = {
     const avatar = profile.photos[0].value;
     return User.findOneAndUpdate(
       { email: email },
-      { lastSeen: Date.now(), name: profile.displayName, avatar, email },
+      { lastSeen: Date.now(), name: profile.name.givenName, avatar, email },
       { upsert: true }
     );
   },
 
   transact(transaction) {
-    const trans = new Transaction(transaction);
-    return trans
-      .save()
-      .then(e => giveKarma(transaction))
-      .then(e => takeKarma(transaction));
+    const transTo = new Transaction(transaction);
+    const transFrom = new Transaction({
+      from: transaction.to,
+      to: transaction.from,
+      karma: -transaction.karma
+    });
+    return Promise.all([
+      transTo.save().then(e => updateKarma(transTo)),
+      transFrom.save().then(e => updateKarma(transFrom))
+    ]);
   },
 
   getTransactions(user) {
     return Transaction
-      .find({ $or: [{ from: user.email }, { to: user.email }] })
-      .limit(5)
-      .sort('-when');
+      .find({ from: user.email })
+      .sort('-when')
+      .limit(5);
+  },
+
+  getOtherParties(user) {
+    return Transaction
+      .distinct('to', { from: user.email })
+      .then(to => User
+        .find({ email: { $in: to } }, { _id: 0, name: 1, email: 1 })
+        .limit(10)
+        .sort('lastSeen')
+      );
   }
 }
 
-function takeKarma(transaction) {
-  return User.update(
-    { email: transaction.from }, 
-    { $inc: { karma: -transaction.karma } }
-  );
-}
-
-function giveKarma(transaction) {
+function updateKarma(transaction) {
   return User.update(
     { email: transaction.to },
     { $inc: { karma: transaction.karma } },

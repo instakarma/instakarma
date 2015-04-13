@@ -2,7 +2,7 @@
 
 {% block main %}
     <div class="row">
-        <div class="seven columns">
+        <div class="six columns">
             <h3>Give karma</h3>
 
             <datalist id="friends">
@@ -13,7 +13,7 @@
 
             <form action="/gief" method="POST">
                 <div class="row">
-                    <div class="three columns">
+                    <div class="two columns">
                         <label>Give:</label>
                         <input class="u-full-width" placeholder="karma" name="karma" value="1" type="number">
                     </div>
@@ -30,7 +30,7 @@
             </form>
         </div>
     
-        <div class="four columns offset-by-one column">
+        <div class="five columns offset-by-one column">
 
             <h6><a href="#">Recent transactions</a></h6>
         
@@ -39,10 +39,10 @@
                     <li>
                         {% if t.direction == "gave" %}
                             <strong>Gave</strong> {{ t.to }} {{ t.amount | abs}} karma
-                            <small>{{ t.ago }}</small>
+                            <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
                         {% else %}
                             <strong>Got</strong> {{ t.from }} {{ t.amount | abs}} karma
-                            <small>{{ t.ago }}</small>
+                            <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
                         {% endif %}
                     </li>
                 {% endfor %}
