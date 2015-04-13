@@ -32,7 +32,7 @@
     
         <div class="five columns offset-by-one column">
 
-            <h6><a href="#">Recent transactions</a></h6>
+            <h6><a href="/transactions">Recent transactions</a></h6>
         
             <ol>
                 {% for t in transactions %}

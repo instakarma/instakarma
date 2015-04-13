@@ -152,24 +152,22 @@ app.get('/me', ensureAuthenticated, (req, res) => {
   const user = res.locals.user;
   Promise.all([
     mongo
-      .getTransactions(user)
+      .getTransactions(user, 5)
       .then(ts => toViewTransactions(user, ts)),
     mongo
       .getOtherParties(user)
-      .then(ps => toViewRecents(user, ps))
+      .then(ps => toViewRecents(ps))
   ]).then(([ts, rs]) => {
     res.render('me', { transactions: ts, friends: rs })
   });
 });
 
-function gatherUserData(user) {
+app.get('/transactions', ensureAuthenticated, (req, res) => {
   mongo
-    .getTransactions(user)
-    .then(ts => {
-      viewTransactions: toViewTransactions(user, ts)
-    });
-
-}
+    .getTransactions(res.locals.user)
+    .then(ts => toViewTransactions(res.locals.user, ts))
+    .then(ts => res.render('transactions', { transactions: ts }));
+});  
 
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
@@ -181,7 +179,7 @@ function toViewTransactions(user, dbTransactions) {
   });
 }
 
-function toViewRecents(user, dbRecents) {
+function toViewRecents(dbRecents) {
   return dbRecents.reverse();
 }
 

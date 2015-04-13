@@ -7,16 +7,6 @@
 <div class="row">
   <div class="two-thirds column drop-top">
 
-    {% if user %}
-        Welcome, {{ user.name }}! You have {{ user.karma }} karma.
-        <br/>
-        <form action="/gief" method="POST">
-            Give <input type="number" min="1" name="karma" value="1">
-            karma to <input type="email" name="to">
-            <input type="submit" value="Give karma">
-        </form>
-        <a href="/logout">Logout</a>
-    {% else %}
         <h2>Karmic currency</h2>
         <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
@@ -30,9 +20,12 @@
             temporibus magnam! Iste cumque velit libero. Facere itaque alias
             tempore libero aliquid.
         </p>
-        <a href="/login">Log in or join!</a>
 
-    {% endif %}
+        {% if user %}
+        	Welcome, {{ user.name }}! You have {{ user.karma }} karma.
+    	{% else %}
+        	<a href="/login">Log in or join!</a>
+    	{% endif %}
 
   </div>
 </div>
