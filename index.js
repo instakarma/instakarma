@@ -88,6 +88,10 @@ function userObjectMiddleware(req, res, next) {
 
 app.use(userObjectMiddleware);
 
+function errorHandler(res) {
+  return e => res.status(500).send(e);
+}
+
 app.get('/', (req, res) => res.render('index'));
 
 app.get('/login', (req, res) => {
@@ -105,7 +109,7 @@ app.post('/gief', (req, res) => {
     // https://github.com/aheckmann/mpromise/issues/15
     mongo
       .transact(transaction)
-      .then((e => res.redirect('/me')), (e => res.status(500).send(e)));
+      .then((e => res.redirect('/me')), errorHandler(res));
   } else {
     res.sendStatus(400);
   }
@@ -182,14 +186,8 @@ app.post('/befriend', ensureAuthenticated, (req, res) => {
       u.friends.push(e);
       return Promise.all([e.save(), u.save()])
     })
-    .then(e => {
-      res.redirect('/friends');
-    })
-    .then(null, e => {
-      console.log(e.stack);
-      res.error(500);
-    });
-})
+    .then((e => res.redirect('/friends')), errorHandler(res));
+});
 
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
