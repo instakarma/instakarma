@@ -61,17 +61,16 @@ const mongo = {
     ]);
   },
 
-  getTransactions(user, limit) {
-    var q = Transaction
+  getTransactions(user, limit, skip) {
+    return Transaction
       .find({ $or: [{ from: user._id }, { to: user._id }] })
       .sort('-when')
-    if (limit) {
-      q.limit(limit)
-    }
-    return q.populate({
-      path: 'from to',
-      select: 'name email avatar -_id'
-    })
+      .limit(limit)
+      .skip(skip)
+      .populate({
+        path: 'from to',
+        select: 'name email avatar -_id'
+      });
   },
 
   getOtherParties(user) {
