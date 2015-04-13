@@ -10,7 +10,7 @@ const favicon         = require('serve-favicon');
 
 const mongo           = require('./mongo.js');
 const config          = require('./config.js');
-const filterMap       = require('./filters.js')
+const filterMap       = require('./filters.js');
 
 const app             = express();
 
@@ -69,7 +69,7 @@ const env = nunjucks.configure('views', {
 });
 
 Object.keys(filterMap).forEach((name) => {
-  env.addFilter(name, filterMap[name])
+  env.addFilter(name, filterMap[name]);
 });
 
 // adds the user object to the responses 'locals' object
@@ -99,7 +99,7 @@ app.post('/gief', (req, res) => {
     to: req.body.to,
     from: res.locals.user._id,
     karma: req.body.karma
-  } 
+  };
   if (transaction.to && transaction.karma > 0) {
     // note: should've used .catch on promise, but not supperted. see
     // https://github.com/aheckmann/mpromise/issues/15
@@ -157,8 +157,8 @@ app.get('/me', ensureAuthenticated, (req, res) => {
     mongo
       .getOtherParties(user)
       .then(ps => toViewRecents(ps))
-  ]).then(([ts, rs]) => {
-    res.render('me', { transactions: ts, friends: rs })
+  ]).then(([transactions, friends]) => {
+    res.render('me', { transactions, friends });
   });
 });
 
@@ -167,7 +167,7 @@ app.get('/transactions', ensureAuthenticated, (req, res) => {
     .getTransactions(res.locals.user)
     .then(ts => toViewTransactions(res.locals.user, ts))
     .then(ts => res.render('transactions', { transactions: ts }));
-});  
+});
 
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
