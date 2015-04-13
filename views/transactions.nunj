@@ -1,15 +1,13 @@
 {% extends 'base.nunj' %}
 
-{#% block header %}{% endblock %#}
-
 {% block main %}
 
 <div class="row">
-	<div class="six columns column">
+	<div class="six columns">
 
         <h3>Transactions</h3>
     
-        <ol>
+        <ul>
             {% for t in transactions %}
                 <li>
                     {% if t.direction == "gave" %}
@@ -21,7 +19,8 @@
                     {% endif %}
                 </li>
             {% endfor %}
-        </ol>
+
+        </ul>
     </div>
 </div>
 
