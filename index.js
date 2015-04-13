@@ -175,9 +175,9 @@ function gatherUserData(user) {
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
     if (t.karma < 0) {
-      return {direction: 'got', to: t.from, from: t.to, amount: -t.karma, timestamp: t.when};
+      return {direction: 'got', to: t.from, from: t.to, amount: -t.karma, timestamp: t.when, avatar: t.avatar};
     } else {
-      return {direction: 'gave', to: t.to, from: t.from, amount: t.karma, timestamp: t.when};
+      return {direction: 'gave', to: t.to, from: t.from, amount: t.karma, timestamp: t.when, avatar: t.avatar};
     }
   });
 }

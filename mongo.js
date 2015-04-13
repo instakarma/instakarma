@@ -73,7 +73,7 @@ const mongo = {
     return Transaction
       .distinct('to', { from: user.email })
       .then(to => User
-        .find({ email: { $in: to } }, { _id: 0, name: 1, email: 1 })
+        .find({ email: { $in: to } }, { _id: 0, name: 1, email: 1, avatar: 1 })
         .limit(10)
         .sort('lastSeen')
       );
