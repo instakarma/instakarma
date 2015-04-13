@@ -1,4 +1,5 @@
 const mongoose = require ('mongoose');
+const shortid  = require('shortid');
 const config   = require('./config.js');
 
 const uristring = config.get('mongoUri');
@@ -18,7 +19,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, index: true },
   avatar: String,
   provider: String,
-  id: Number,
+  id: String,
   lastSeen: Date,
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
   name: { type: String, trim: true }
@@ -45,7 +46,8 @@ const mongo = {
     const avatar = profile.photos[0].value;
     return User.findOneAndUpdate(
       { email: email },
-      { lastSeen: Date.now(), name: profile.name.givenName, avatar, email },
+      { lastSeen: Date.now(), name: profile.name.givenName,
+        avatar, email, id: shortid.generate() },
       { upsert: true }
     );
   },
