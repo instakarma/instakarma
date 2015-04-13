@@ -11,6 +11,15 @@ body {
 
 }
 
+.top-bar__avatar {
+    margin: 0 0 0 8px;
+}
+
+.top-bar__floater {
+    text-align: right;
+    min-width: 50%;
+}
+
 .avatar {
     border-radius: 50%;
 }

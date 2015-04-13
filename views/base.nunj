@@ -24,9 +24,15 @@
 
             {% if user %}
                 <span class="u-pull-right top-bar__floater">
-                    <a href="/me">{{ user.name }}</a> |
+                    {{ user.name }}
                     <strong>{{ user.karma }} karma</strong>
-                    <img class="avatar" src="{{ user | avatarUrl }}">
+                    <a href="/me">
+                        <img class="avatar top-bar__avatar u-pull-right" src="{{ user | avatarUrl }}">
+                    </a>
+                    <br>
+                    <a href="/me">me</a> &bull;
+                    <a href="/friends">friends</a> &bull;
+                    <a href="/transactions">transactions</a>
                 </span>
             {% endif %}
           </div>
