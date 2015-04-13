@@ -157,9 +157,8 @@ app.get('/me', ensureAuthenticated, (req, res) => {
     mongo
       .getOtherParties(user)
       .then(ps => toViewRecents(user, ps))
-  ]).then(data => {
-    console.log(data[0]);
-    res.render('me', { transactions: data[0], friends: data[1] })
+  ]).then(([ts, rs]) => {
+    res.render('me', { transactions: ts, friends: rs })
   });
 });
 
