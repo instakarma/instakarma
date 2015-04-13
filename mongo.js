@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const shortid  = require('shortid');
 const config   = require('./config.js');
 
@@ -38,7 +38,10 @@ const Transaction = mongoose.model('Transactions', transactionSchema);
 
 const mongo = {
   findUser(user) {
-    return User.findOne({ email: user.email });
+    return User
+      .findOne({ email: user.email })
+      .populate('friends')
+      .exec();
   },
 
   findOrCreateUser(profile) {
