@@ -169,6 +169,28 @@ app.get('/transactions', ensureAuthenticated, (req, res) => {
     .then(ts => res.render('transactions', { transactions: ts }));
 });
 
+app.get('/friends', ensureAuthenticated, (req, res) => {
+  res.render('friends');
+});
+
+app.post('/befriend', ensureAuthenticated, (req, res) => {
+  const u = res.locals.user;
+  mongo
+    .findUser({ email: req.body.email }) // durtay!
+    .then(e => {
+      e.friends.push(u);
+      u.friends.push(e);
+      return Promise.all([e.save(), u.save()])
+    })
+    .then(e => {
+      res.redirect('/friends');
+    })
+    .then(null, e => {
+      console.log(e.stack);
+      res.error(500);
+    });
+})
+
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
     if (t.to.email === user.email) {

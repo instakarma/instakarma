@@ -1,0 +1,23 @@
+{% extends 'base.nunj' %}
+
+{% block main %}
+    <div class="row">
+        <div class="two-thirds column">
+            <h3>Friends</h3>
+
+            <form action="/befriend" method="post">
+                <input name="email" placeholder="email" type="email">
+                <button type="submit">Add friend</button>
+            </form>
+
+            {% if user.friends.length %}
+                {% for f in user.friends %}
+                    <div><img width="50" height="50" class="avatar" src="{{ f | avatarUrl }}"> {{ f.name }}: {{ f.karma }} karma.</div>
+                {% endfor %}
+            {% else %}
+                No friends in your list yet!
+            {% endif %}
+
+        </div>    
+    </div>
+{% endblock %}
