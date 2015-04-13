@@ -97,10 +97,10 @@ app.get('/login', (req, res) => {
 app.post('/gief', (req, res) => {
   const transaction = {
     to: req.body.to,
-    from: res.locals.user.email,
+    from: res.locals.user._id,
     karma: req.body.karma
   } 
-  if (transaction.to != transaction.from && transaction.karma > 0) {
+  if (transaction.to && transaction.karma > 0) {
     // note: should've used .catch on promise, but not supperted. see
     // https://github.com/aheckmann/mpromise/issues/15
     mongo
@@ -173,10 +173,10 @@ function gatherUserData(user) {
 
 function toViewTransactions(user, dbTransactions) {
   return dbTransactions.map(t => {
-    if (t.karma < 0) {
-      return {direction: 'got', to: t.from, from: t.to, amount: -t.karma, timestamp: t.when, avatar: t.avatar};
+    if (t.to.email === user.email) {
+      return {direction: 'got', to: t.to, from: t.from, amount: -t.karma, timestamp: t.when};
     } else {
-      return {direction: 'gave', to: t.to, from: t.from, amount: t.karma, timestamp: t.when, avatar: t.avatar};
+      return {direction: 'gave', to: t.to, from: t.from, amount: t.karma, timestamp: t.when};
     }
   });
 }

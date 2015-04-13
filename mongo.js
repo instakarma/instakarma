@@ -20,13 +20,14 @@ const userSchema = new mongoose.Schema({
   provider: String,
   id: Number,
   lastSeen: Date,
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
   name: { type: String, trim: true }
 });
 userSchema.index({ provider: 1, id: 1 });
 
 const transactionSchema = new mongoose.Schema({
-  from: String,
-  to: String,
+  from: { type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
+  to: { type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
   karma: Number,
   when: { type: Date, default: () => Date.now() }
 });
@@ -49,39 +50,49 @@ const mongo = {
     );
   },
 
-  transact(transaction) {
-    const transTo = new Transaction(transaction);
-    const transFrom = new Transaction({
-      from: transaction.to,
-      to: transaction.from,
-      karma: -transaction.karma
-    });
+  transact(t) {
     return Promise.all([
-      transTo.save().then(e => updateKarma(transTo)),
-      transFrom.save().then(e => updateKarma(transFrom))
+      giveKarma(t).then(to => {
+        t.to = to._id;
+        new Transaction(t).save();
+        return to;
+      }),
+      takeKarma(t)
     ]);
   },
 
   getTransactions(user) {
     return Transaction
-      .find({ from: user.email })
+      .find({ $or: [{ from: user._id }, { to: user._id }] })
       .sort('-when')
-      .limit(5);
+      .limit(5)
+      .populate({
+        path: 'from to',
+        select: 'name email avatar -_id'
+      })
   },
 
   getOtherParties(user) {
     return Transaction
-      .distinct('to', { from: user.email })
-      .then(to => User
-        .find({ email: { $in: to } }, { _id: 0, name: 1, email: 1, avatar: 1 })
-        .limit(10)
-        .sort('lastSeen')
+      .distinct('to', {$or: [{ from: user._id }, {to: user._id}]})
+      .then(ts => 
+        User.find(
+          { _id: { $in: ts } }, 
+          { name: 1, email: 1, avatar: 1} 
+        ).sort('lastSeen')
       );
   }
 }
 
-function updateKarma(transaction) {
-  return User.update(
+function takeKarma(transaction) {
+  return User.findOneAndUpdate(
+    { _id: transaction.from }, 
+    { $inc: { karma: -transaction.karma } }
+  );
+}
+
+function giveKarma(transaction) {
+  return User.findOneAndUpdate(
     { email: transaction.to },
     { $inc: { karma: transaction.karma } },
     { upsert: true }

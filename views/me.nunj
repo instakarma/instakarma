@@ -38,10 +38,10 @@
                 {% for t in transactions %}
                     <li>
                         {% if t.direction == "gave" %}
-                            <strong>Gave</strong> {{ t.to }} {{ t.amount | abs}} karma
+                            <strong>Gave</strong> {{ t.to.name | d(t.to.email) }} {{ t.amount | abs}} karma
                             <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
                         {% else %}
-                            <strong>Got</strong> {{ t.from }} {{ t.amount | abs}} karma
+                            <strong>Got</strong> {{ t.from.name | d(t.from.email) }} {{ t.amount | abs}} karma
                             <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
                         {% endif %}
                     </li>
