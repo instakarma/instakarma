@@ -3,7 +3,7 @@
 {% block main %}
 
 <div class="row">
-	<div class="six columns">
+	<div class="two-thirds column">
 
         <h3>Transactions</h3>
     
