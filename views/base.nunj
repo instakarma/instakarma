@@ -32,7 +32,8 @@
                     <br>
                     <a href="/me">me</a> &bull;
                     <a href="/friends">friends</a> &bull;
-                    <a href="/transactions">transactions</a>
+                    <a href="/transactions">transactions</a> &bull;
+                    <a href="/gief">gief</a>
                 </span>
             {% endif %}
           </div>

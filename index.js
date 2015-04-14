@@ -98,6 +98,15 @@ app.get('/login', (req, res) => {
   res.render('login', { returnPath: req.query.returnPath });
 });
 
+app.get('/gief', ensureAuthenticated, (req, res) => {
+  const me = res.locals.user;
+  mongo
+    .getOtherParties(me)
+    .then(otherParties => {
+      res.render('gief', { otherParties });
+    });
+});
+
 app.post('/gief', (req, res) => {
   const transaction = {
     to: req.body.to,

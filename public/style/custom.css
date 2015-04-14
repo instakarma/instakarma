@@ -3,6 +3,10 @@ body {
     padding-top: 1.5%;
 }
 
+form {
+    display: inline;
+}
+
 .drop-top {
      margin-top: 10%;
 }
@@ -22,6 +26,11 @@ body {
 
 .avatar {
     border-radius: 50%;
+}
+
+.user-gief-button {
+    width: 130px;
+    min-height: 130px;
 }
 
 @media (max-width: 550px) {
