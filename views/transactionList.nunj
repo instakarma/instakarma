@@ -1,0 +1,13 @@
+<ol>
+    {% for t in transactions %}
+        <li>
+            {% if t.direction == "gave" %}
+                <strong>Gave</strong> {{ t.amount | abs}} karma to {{ t.to.name | d(t.to.email) }} 
+                <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
+            {% else %}
+                <strong>Got</strong> {{ t.amount | abs}} karma from {{ t.from.name | d(t.from.email) }} 
+                <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>

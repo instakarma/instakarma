@@ -7,20 +7,7 @@
 
         <h3>Transactions</h3>
     
-        <ul>
-            {% for t in transactions %}
-                <li>
-                    {% if t.direction == "gave" %}
-                        <strong>Gave</strong> {{ t.to.name | d(t.to.email) }} {{ t.amount | abs}} karma
-                        <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
-                    {% else %}
-                        <strong>Got</strong> {{ t.from.name | d(t.from.email) }} {{ t.amount | abs}} karma
-                        <small>{{ t.timestamp | fuzzyTimeSinceNow }}</small>
-                    {% endif %}
-                </li>
-            {% endfor %}
-
-        </ul>
+        {% include 'transactionList.nunj' %}
     </div>
 </div>
 
