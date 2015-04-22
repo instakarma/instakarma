@@ -1,5 +1,7 @@
 {% extends 'base.nunj' %}
 
+{% import 'macros.nunj' as m %}
+
 {% block main %}
     <div class="row">
         <div class="six columns">
@@ -34,7 +36,8 @@
 
             <h6><a href="/transactions">Recent transactions</a></h6>
         
-            {% include 'transactionList.nunj' %}
+            {{ m.transactionList(transactions) }}
+
         </div>
     </div>
 {% endblock %}
