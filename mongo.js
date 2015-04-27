@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const shortid  = require('shortid');
+const geolib   = require('geolib');
 const config   = require('./config.js');
 
 const uristring = config.get('mongoUri');
@@ -33,8 +34,15 @@ const transactionSchema = new mongoose.Schema({
   when: { type: Date, default: () => Date.now() }
 });
 
+const beaconSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
+  location: { type: [Number], index: '2d' },
+  when: { type: Date, default: () => Date.now() }
+});
+
 const User = mongoose.model('Users', userSchema);
 const Transaction = mongoose.model('Transactions', transactionSchema);
+const Beacon = mongoose.model('Beacons', beaconSchema);
 
 const mongo = {
   findUser(user) {
@@ -87,6 +95,24 @@ const mongo = {
           { name: 1, email: 1, avatar: 1} 
         ).sort('lastSeen')
       );
+  },
+
+  findBeacon(lat, lon, distanceM) {
+    return Beacon
+      .find({ 
+        location: { $near: {
+          $geometry: { type: 'Point', coordinates: [lon, lat] }, 
+          $maxDistance: distanceM //config?
+        }} 
+      })
+      .populate('user');
+  },
+
+  addBeacon(user, lat, lon) {
+    return new Beacon({
+      user: uid,
+      location: [lon, lat]
+    }).create;
   }
 }
 
