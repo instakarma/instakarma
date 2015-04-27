@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const shortid  = require('shortid');
-const geolib   = require('geolib');
 const config   = require('./config.js');
 
 const uristring = config.get('mongoUri');
