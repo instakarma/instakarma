@@ -1,3 +1,4 @@
+{% macro transactionList(transactions) %}
 <ol>
     {% for t in transactions %}
         <li>
@@ -11,3 +12,4 @@
         </li>
     {% endfor %}
 </ol>
+{% endmacro %}

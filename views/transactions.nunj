@@ -1,13 +1,14 @@
 {% extends 'base.nunj' %}
 
+{% import 'macros.nunj' as m %}
+
 {% block main %}
 
 <div class="row">
 	<div class="two-thirds column">
-
         <h3>Transactions</h3>
-    
-        {% include 'transactionList.nunj' %}
+        
+        {{ m.transactionList(transactions) }}
     </div>
 </div>
 
