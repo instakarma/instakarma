@@ -1,0 +1,13 @@
+{% extends 'base.nunj' %}
+
+{% import 'macros.nunj' as m %}
+
+{% block main %}
+    <div class="row">
+        <div class="twelve columns">
+            <h3>*sploded*</h3>
+            <h4>{{ err.message }}</h4>
+            <code><pre>{{ err.stack }}</pre></code>
+        </div>
+    </div>
+{% endblock %}
