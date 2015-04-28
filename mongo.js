@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   provider: String,
   id: String,
   lastSeen: Date,
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
+  friends: { type: [mongoose.Schema.Types.ObjectId], ref: 'Users', default: []},
   name: { type: String, trim: true }
 });
 userSchema.index({ provider: 1, id: 1 });
@@ -49,6 +49,13 @@ const mongo = {
       .findOne({ email: user.email })
       .populate('friends')
       .exec();
+  },
+
+  findOneUserOrCreate(email) {
+    return User.findOneAndUpdate(
+      { email }, { email },
+      { upsert: true }
+    );
   },
 
   findOrCreateUser(profile) {

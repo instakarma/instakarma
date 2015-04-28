@@ -189,7 +189,7 @@ app.get('/friends', ensureAuthenticated, (req, res) => {
 app.post('/befriend', ensureAuthenticated, (req, res) => {
   const u = res.locals.user;
   mongo
-    .findUser({ email: req.body.email }) // durtay!
+    .findOneUserOrCreate(req.body.email) // durtay!
     .then(e => {
       e.friends.push(u);
       u.friends.push(e);
