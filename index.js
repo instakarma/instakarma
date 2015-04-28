@@ -89,7 +89,7 @@ function userObjectMiddleware(req, res, next) {
 app.use(userObjectMiddleware);
 
 function errorHandler(res) {
-  return e => res.status(500).send(e);
+  return err => res.status(500).render('error', { err });
 }
 
 app.get('/', (req, res) => res.render('index'));
@@ -104,7 +104,8 @@ app.get('/gief', ensureAuthenticated, (req, res) => {
     .getOtherParties(me)
     .then(otherParties => {
       res.render('gief', { otherParties });
-    });
+    })
+    .then(null, errorHandler(res));
 });
 
 app.post('/gief', (req, res) => {
