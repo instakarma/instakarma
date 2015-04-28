@@ -7,6 +7,7 @@ const uristring = config.get('mongoUri');
 mongoose.connect(uristring, (err, res) => {
   if (err) {
     console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+    process.exit(1);
   } else {
     console.log ('Succeeded connected to: ' + uristring);
   }
