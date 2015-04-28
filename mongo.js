@@ -55,7 +55,7 @@ const mongo = {
   findOneUserOrCreate(email) {
     return User.findOneAndUpdate(
       { email }, { email },
-      { upsert: true }
+      { upsert: true, new: true }
     );
   },
 
