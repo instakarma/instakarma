@@ -1,5 +1,7 @@
 {% extends 'base.nunj' %}
 
+{% import 'macros.nunj' as m %}
+
 {% block main %}
     <div class="row">
         <div class="two-thirds columns">
@@ -32,6 +34,9 @@
 
             <h4>Friends</h4>
             {{ giefImages(user.friends) }}
+
+            <h4>Nearby people</h4>
+            {{ m.position() }}
 
         </div>
     </div>

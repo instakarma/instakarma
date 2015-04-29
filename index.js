@@ -171,8 +171,8 @@ app.get('/me', ensureAuthenticated, (req, res) => {
     mongo
       .getOtherParties(user)
       .then(ps => toViewRecents(ps))
-  ]).then(([transactions, friends]) => {
-    res.render('me', { transactions, friends });
+  ]).then(([transactions, others]) => {
+    res.render('me', { transactions, friends: others.concat(user.friends).distinct });
   });
 });
 
@@ -192,9 +192,13 @@ app.post('/befriend', ensureAuthenticated, (req, res) => {
   mongo
     .findOneUserOrCreate(req.body.email) // durtay!
     .then(e => {
-      e.friends.push(u);
-      u.friends.push(e);
-      return Promise.all([e.save(), u.save()])
+      const eAdded = e.friends.addToSet(u);
+      const uAdded = u.friends.addToSet(e);
+      if (eAdded && uAdded) { 
+        return Promise.all([e.save(), u.save()])
+      } else {
+        return new Promise([]); // User already befriended
+      }
     })
     .then((e => res.redirect('/friends')), errorHandler(res));
 });

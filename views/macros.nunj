@@ -13,3 +13,19 @@
     {% endfor %}
 </ol>
 {% endmacro %}
+
+{% macro position() %}
+<div id="position"></div>
+<script>
+    var x = document.getElementById("position");
+    console.log(x);
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                x.innerHTML = position.coords.latitude + ' ' + position.coords.longitude;
+            });
+        }
+    }
+    getLocation();
+</script>
+{% endmacro %}
