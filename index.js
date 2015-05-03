@@ -195,9 +195,9 @@ app.post('/befriend', ensureAuthenticated, (req, res) => {
       const eAdded = e.friends.addToSet(u);
       const uAdded = u.friends.addToSet(e);
       if (eAdded && uAdded) { 
-        return Promise.all([e.save(), u.save()])
+        return Promise.all([e.save(), u.save()]);
       } else {
-        return new Promise([]); // User already befriended
+        return []; // User already befriended
       }
     })
     .then((e => res.redirect('/friends')), errorHandler(res));
