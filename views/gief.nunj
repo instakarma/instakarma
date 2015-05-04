@@ -15,7 +15,8 @@ function main() {
 }
 
 function onUseGeoClick(evt) {
-    getLocationPromise().then(reloadWithLocation)
+    evt.target.textContent = "Henter posisjon…";
+    getLocationPromise().then(reloadWithLocation);
 }
 
 function reloadWithLocation(loc) {
