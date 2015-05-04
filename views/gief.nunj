@@ -9,16 +9,16 @@ window.addEventListener('load', main);
 
 function main() {
     var button = document.querySelector("[data-location-button]");
-    button.addEventListener('click', onUseGeoClick);
+    if (button) {
+        button.addEventListener('click', onUseGeoClick);
+    }
 }
 
 function onUseGeoClick(evt) {
-    console.log("lel");
     getLocationPromise().then(reloadWithLocation)
 }
 
 function reloadWithLocation(loc) {
-    console.log(loc);
     var search = "?lat=" + loc.coords.latitude + "&lng=" + loc.coords.longitude;
     window.location.search = search;
 }
@@ -80,9 +80,6 @@ function getLocationPromise() {
                     Use my location to find people nearby
                 </button>
             {% endif %}
-
-
-            {{ m.position() }}
 
         </div>
     </div>

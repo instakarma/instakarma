@@ -113,8 +113,6 @@ app.get('/gief', ensureAuthenticated, (req, res) => {
   Promise
     .all(stuff)
     .then(([otherParties, closeParties]) => {
-      console.log(closeParties)
-      console.log(JSON.stringify(closeParties))
       res.render('gief', { otherParties, closeParties, location });
     })
     .then(null, errorHandler(res));
