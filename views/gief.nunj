@@ -38,33 +38,11 @@ function getLocationPromise() {
         <div class="two-thirds columns">
             <h3>Give karma</h3>
 
-            {% macro giefImages(users) %}
-
-                {% if users.length %}
-            
-                    {% for user in users %}
-                        <form action="/confirm-gief" method="post">
-                            <button type="submit" class="user-gief-button">
-                                <img width="50" height="50" class="avatar" src="{{ user | avatarUrl }}">
-                                <br>
-                                {{ user.name }}
-                            </button>
-                        </form>
-                    {% endfor %}
-            
-                {% else %}
-            
-                    <strong>No users</strong>
-            
-                {% endif %}
-    
-            {% endmacro %}
-
             <h4>Recent contacts</h4>
-            {{ giefImages(otherParties) }}
+            {{ m.giefImages(otherParties) }}
 
             <h4>Friends</h4>
-            {{ giefImages(user.friends) }}
+            {{ m.giefImages(user.friends) }}
 
             <h4>Nearby people</h4>
             {% if location %}

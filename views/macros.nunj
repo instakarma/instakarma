@@ -13,3 +13,26 @@
     {% endfor %}
 </ol>
 {% endmacro %}
+
+
+{% macro giefImages(users) %}
+
+    {% if users.length %}
+
+        {% for user in users %}
+            <form action="/confirm-gief" method="post">
+                <button type="submit" class="user-gief-button">
+                    <img width="50" height="50" class="avatar" src="{{ user | avatarUrl }}">
+                    <br>
+                    {{ user.name }}
+                </button>
+            </form>
+        {% endfor %}
+
+    {% else %}
+
+        <strong>No users</strong>
+
+    {% endif %}
+
+{% endmacro %}
