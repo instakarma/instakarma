@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/style/normalize.css">
     <link rel="stylesheet" href="/style/skeleton.css">
     <link rel="stylesheet" href="/style/custom.css">
+
+    {% block header_extras %}{% endblock %}
+
 </head>
 
 {% block header %}

@@ -2,6 +2,36 @@
 
 {% import 'macros.nunj' as m %}
 
+
+{% block header_extras %}
+<script>
+window.addEventListener('load', main);
+
+function main() {
+    var button = document.querySelector("[data-location-button]");
+    button.addEventListener('click', onUseGeoClick);
+}
+
+function onUseGeoClick(evt) {
+    console.log("lel");
+    getLocationPromise().then(reloadWithLocation)
+}
+
+function reloadWithLocation(loc) {
+    console.log(loc);
+    var search = "?lat=" + loc.coords.latitude + "&lng=" + loc.coords.longitude;
+    window.location.search = search;
+}
+
+function getLocationPromise() {
+    return new Promise(function(resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+}
+</script>
+{% endblock %}
+
+
 {% block main %}
     <div class="row">
         <div class="two-thirds columns">
@@ -36,6 +66,22 @@
             {{ giefImages(user.friends) }}
 
             <h4>Nearby people</h4>
+            {% if location %}
+                <!-- should use macro when populating works -->
+                {% if closeParties %}
+                    {% for e in closeParties %}
+                        <code><pre>{{ e | jsonString }}</pre></code>
+                    {% endfor %}
+                {% else %}
+                    No people nearby.
+                {% endif %}
+            {% else %}
+                <button type="button" class="button-primary" data-location-button>
+                    Use my location to find people nearby
+                </button>
+            {% endif %}
+
+
             {{ m.position() }}
 
         </div>

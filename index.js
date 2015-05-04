@@ -100,10 +100,22 @@ app.get('/login', (req, res) => {
 
 app.get('/gief', ensureAuthenticated, (req, res) => {
   const me = res.locals.user;
-  mongo
-    .getOtherParties(me)
-    .then(otherParties => {
-      res.render('gief', { otherParties });
+  let location;
+  if (req.query.lat && req.query.lng) {
+    location = { lat: req.query.lat, lng: req.query.lng };
+  }
+
+  let stuff = [
+    mongo.getOtherParties(me),
+    location ? mongo.findBeacon(location.lat, location.lng, 1000) : null
+  ];
+
+  Promise
+    .all(stuff)
+    .then(([otherParties, closeParties]) => {
+      console.log(closeParties)
+      console.log(JSON.stringify(closeParties))
+      res.render('gief', { otherParties, closeParties, location });
     })
     .then(null, errorHandler(res));
 });
