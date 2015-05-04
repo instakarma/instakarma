@@ -9,7 +9,7 @@ const filterMap = {
 	},
 
     avatarUrl(user) {
-        return user.avatar || 'http://api.adorable.io/avatars/50/' + user.id + '.png'
+        return user.avatar || 'https://robohash.org/' + user.id + '?size=80x80&bgset=bg1';
     },
 
     jsonString(obj) {
